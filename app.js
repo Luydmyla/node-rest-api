@@ -2,10 +2,16 @@
 const express = require("express");
 // import morgan from "morgan";
 const morgan = require("morgan");
+<<<<<<< HEAD
 const logger = require("morgan");
 // import cors from "cors";
 const cors = require("cors");
 require("dotenv").config();
+=======
+// import cors from "cors";
+const cors = require("cors");
+
+>>>>>>> 1a065525acc7606234cb0c6ca2946d652f51c941
 // import contactsRouter from "./routes/api/contactsRouter.js";
 const contactsRouter = require("./routes/api/contactsRouter");
 const app = express();
@@ -30,4 +36,11 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
+<<<<<<< HEAD
+=======
+app.listen(3000, () => {
+  console.log("Server is running. Use our API on port: 3000");
+});
+
+>>>>>>> 1a065525acc7606234cb0c6ca2946d652f51c941
 module.exports = app;
