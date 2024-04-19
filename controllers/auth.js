@@ -10,7 +10,7 @@ const register = async (req, res) => {
   const user = await User.findOne({ email });
 //   console.log(user)
   if (user) {
-    throw HttpError(409, "This email is already in use");
+    throw HttpError(409, "Email in use");
   }
   const hashPassword = await bcrypt.hash(password, 10);
 //   console.log(hashPassword)
@@ -18,7 +18,7 @@ const register = async (req, res) => {
 //  console.log(newUser);
   res.status(201).json({
     email: newUser.email,
-    subscription: newUser.subscription,
+  password:password,
     // name: newUser.name,
   });
 };
@@ -28,7 +28,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw HttpError(409, "Email or password invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
   const payload = {
     id:user.id
@@ -37,9 +37,14 @@ const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "24h"})
 
   const passwordCompare = await bcrypt.compare(password, user.password);
  if(!passwordCompare) {
-  throw HttpError(409, "Email or password invalid");
+  throw HttpError(401, "Email or password is wrong");
  }
   res.json({
+    user:{
+        email: user.email,
+        subscription: user.subscription,
+    },
+    // password:password,
     token, 
   })
 };

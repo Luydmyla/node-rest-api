@@ -21,7 +21,7 @@ const contactSchema = new Schema(
     owner:{
       type: Schema.Types.ObjectId,
       ref:"user", //назва колекці з якої це айді
-      required:true
+      // required:true
     
     }
   },
