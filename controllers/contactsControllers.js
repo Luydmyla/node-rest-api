@@ -1,10 +1,13 @@
-<<<<<<< HEAD
 const { Contact } = require("../models/contacts.js");
 
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getAllContacts = async (req, res) => {
-  const result = await Contact.find();
+  const {_id:owner} = req.user
+  console.log(req.query)
+  const {page=1, limit=10} = req.query;
+  const skip = (page - 1)*limit
+  const result = await Contact.find({owner}, "-createAt, -updateAt",{skip, limit}).populate("owner" ,"name email");;
   res.json(result);
 };
 
@@ -27,7 +30,8 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const {_id:owner} = req.user
+  const result = await Contact.create(...req.body, owner);
   res.status(201).json(result);
 };
 
@@ -43,60 +47,16 @@ const updateContact = async (req, res) => {
 const updateStatusContact = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
-=======
-const contactsService = require("../services/contactsServices.js");
-// import contactsService from "../services/contactsServices.js";
-const HttpError = require("../helpers/HttpError.js");
-const getAllContacts = async (req, res) => {
-  const result = await contactsService.listContacts();
-  res.json(result);
-};
-
-const getOneContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.getContactById(id);
-  if (!result) {
-    throw HttpError(404, "Not found");
-  }
-  res.json(result);
-};
-
-const deleteContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.removeContact(id);
-  if (!result) {
-    throw HttpError(404, "Not found");
-  }
-  res.json(result);
-};
-
-const createContact = async (req, res) => {
-  const result = await contactsService.addContact(req.body);
-  res.status(201).json(result);
-};
-
-const updateContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await contactsService.updateById(id, req.body);
->>>>>>> 1a065525acc7606234cb0c6ca2946d652f51c941
   if (!result) {
     throw HttpError(404, "Not found");
   }
   res.json(result);
 };
 module.exports = {
-<<<<<<< HEAD
   getAllContacts: ctrlWrapper(getAllContacts),
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
   updateStatusContact: ctrlWrapper(updateStatusContact),
-=======
-  getAllContacts,
-  getOneContact,
-  deleteContact,
-  createContact,
-  updateContact,
->>>>>>> 1a065525acc7606234cb0c6ca2946d652f51c941
 };
