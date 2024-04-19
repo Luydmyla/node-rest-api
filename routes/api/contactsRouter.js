@@ -1,6 +1,6 @@
 // import express from "express";
 const express = require("express");
-const { validateBody, isValidId } = require("../../middlewares");
+const { validateBody, isValidId,authenticate } = require("../../middlewares");
 const { schemas } = require("../../models/contacts.js");
 
 // const {
@@ -25,25 +25,26 @@ const {
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/",authenticate, getAllContacts);
 
-contactsRouter.get("/:id", isValidId, getOneContact);
+contactsRouter.get("/:id",authenticate, isValidId, getOneContact);
 
-contactsRouter.delete("/:id", isValidId, deleteContact);
+contactsRouter.delete("/:id",authenticate, isValidId, deleteContact);
 
 contactsRouter.post(
-  "/",
+  "/",authenticate,
   validateBody(schemas.createContactSchema),
   createContact
 );
 
 contactsRouter.put(
   "/:id",
+  authenticate,
   isValidId,
   validateBody(schemas.updateContactSchema),
   updateContact
 );
 
-contactsRouter.patch("/:id/favorite", updateStatusContact);
+contactsRouter.patch("/:id/favorite",authenticate, updateStatusContact);
 // export default contactsRouter;
 module.exports = contactsRouter;

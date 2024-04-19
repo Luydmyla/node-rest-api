@@ -1,9 +1,9 @@
 const { Contact } = require("../models/contacts.js");
-
+// const { User } = require("../models/user.js");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getAllContacts = async (req, res) => {
-  const {_id:owner} = req.user
+  const {_id: owner} = req.user
   console.log(req.query)
   const {page=1, limit=10} = req.query;
   const skip = (page - 1)*limit
@@ -30,8 +30,9 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const {_id:owner} = req.user
-  const result = await Contact.create(...req.body, owner);
+  const {_id: owner} = req.user
+  console.log( owner)
+  const result = await Contact.create({...req.body, owner});
   res.status(201).json(result);
 };
 
